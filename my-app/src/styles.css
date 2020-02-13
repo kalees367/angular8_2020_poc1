@@ -1,0 +1,10 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("assets/sb-admin.css");
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.margin-left200{
+    margin-left: 200px;
+}
+.margin-left50{
+    margin-left: 50px;
+}

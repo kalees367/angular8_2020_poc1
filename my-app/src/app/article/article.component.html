@@ -1,0 +1,104 @@
+<div class="margin-left50">
+<h1>Manage Articles</h1>
+<hr>
+<h3 *ngIf="articleIdToUpdate; else create"> 
+   Update Article for Id: {{articleIdToUpdate}}
+</h3>
+<ng-template #create>
+   <h5> Create New Article </h5>
+</ng-template>
+<div>
+ <form class="example-form" [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
+  <table >
+    <tr>
+    <td>
+      <mat-form-field class="example-full-width">
+        <mat-label>Enter Title</mat-label>
+        <input matInput  formControlName="title">
+      </mat-form-field>
+	  <label *ngIf="articleForm.get('title').invalid && processValidation" [ngClass] = "'error'"> Title is required. </label>
+     </td>
+  </tr>
+    <tr><td>
+      
+      <mat-form-field class="example-full-width">
+        <mat-label>Enter Category</mat-label>
+        <input matInput  formControlName="category">
+      </mat-form-field>
+
+	       <label *ngIf="articleForm.get('category').invalid && processValidation" [ngClass] = "'error'"> Category is required. </label>
+	</td></tr>	
+    <tr><td >
+	    <button *ngIf="!articleIdToUpdate">CREATE</button>  
+		<button *ngIf="articleIdToUpdate">UPDATE</button>  
+	    <button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate">Go Back</button>  
+	</td></tr>
+  </table>
+ </form> 
+ <br/>
+
+
+ <div *ngIf="statusCode; else processing">
+   <div *ngIf="statusCode === 201" [ngClass] = "'success'">
+	    Article added successfully.
+   </div>   
+   <div *ngIf="statusCode === 409" [ngClass] = "'success'">
+        Article already exists.
+   </div>   	
+   <div *ngIf="statusCode === 200" [ngClass] = "'success'">
+        Article updated successfully.
+   </div>   	      
+   <div *ngIf="statusCode === 204" [ngClass] = "'success'">
+        Article deleted successfully.
+   </div>   	   
+   <div *ngIf="statusCode === 500" [ngClass] = "'error'">
+        Internal Server Error.
+   </div>	
+ </div>
+ <ng-template #processing>
+	<img *ngIf="requestProcessing" src="assets/images/loading.gif">
+ </ng-template>
+</div>
+<h5>List of Articles</h5>
+
+<!-- end details-->
+<table mat-table [dataSource]="MyDataSource" class="mat-elevation-z8">
+
+  <!--- Note that these columns can be defined in any order.
+        The actual rendered columns are set as a property on the row definition" -->
+
+  <!-- Position Column -->
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> Id. </th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <!-- Weight Column -->
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef> Title </th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+  </ng-container>
+
+  <!-- Symbol Column -->
+  <ng-container matColumnDef="category">
+    <th mat-header-cell *matHeaderCellDef> Category </th>
+    <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+  </ng-container>
+
+   <!-- Action Column -->
+   <ng-container matColumnDef="action">
+    <th mat-header-cell *matHeaderCellDef> Action </th>
+    <td mat-cell *matCellDef="let element"> <button type="button" (click)="loadArticleToEdit(element.id)">Edit</button>  <button type="button" (click)="deleteArticle(element.id)">Delete</button></td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
+<mat-paginator #paginator
+              [pageSize]="5"
+              [pageSizeOptions]="[ 10, 25, 100]">
+</mat-paginator>
+
+
+
+</div>
